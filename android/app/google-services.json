@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "434290360981",
+    "project_id": "minesmart-c5373",
+    "storage_bucket": "minesmart-c5373.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:434290360981:android:33ca6d4fd698aa75e1d19c",
+        "android_client_info": {
+          "package_name": "com.example.mine_smart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlJRSv7oJIIwoTv-mtb1Ho6y9rVMf3_5w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
