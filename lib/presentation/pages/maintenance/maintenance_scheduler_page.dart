@@ -349,157 +349,150 @@ class MaintenanceSchedulerPage extends StatelessWidget {
     final timeUntil = _controller.getTimeUntilMaintenance(machine);
 
     return GestureDetector(
-      onTap: () => _showMachineDetails(machine),
-      child:
-          Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [statusColor.withOpacity(0.15), AppTheme.cardColor],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: machine.status == MaintenanceStatus.urgent
-                        ? statusColor
-                        : statusColor.withOpacity(0.3),
-                    width: machine.status == MaintenanceStatus.urgent ? 3 : 2,
-                  ),
-                  boxShadow: machine.status == MaintenanceStatus.urgent
-                      ? [
-                          BoxShadow(
-                            color: statusColor.withOpacity(0.3),
-                            blurRadius: 15,
-                            spreadRadius: 2,
-                          ),
-                        ]
-                      : null,
-                ),
-                child: Column(
+          onTap: () => _showMachineDetails(machine),
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [statusColor.withOpacity(0.15), AppTheme.cardColor],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: machine.status == MaintenanceStatus.urgent
+                    ? statusColor
+                    : statusColor.withOpacity(0.3),
+                width: machine.status == MaintenanceStatus.urgent ? 3 : 2,
+              ),
+              boxShadow: machine.status == MaintenanceStatus.urgent
+                  ? [
+                      BoxShadow(
+                        color: statusColor.withOpacity(0.3),
+                        blurRadius: 15,
+                        spreadRadius: 2,
+                      ),
+                    ]
+                  : null,
+            ),
+            child: Column(
+              children: [
+                Row(
                   children: [
-                    Row(
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: statusColor.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Text(
+                        machine.icon,
+                        style: const TextStyle(fontSize: 32),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            machine.name,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            machine.type,
+                            style: TextStyle(
+                              color: AppTheme.accentColor,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          LinearProgressIndicator(
+                            value: machine.condition / 100,
+                            backgroundColor: Colors.white.withOpacity(0.1),
+                            color: statusColor,
+                            minHeight: 6,
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             color: statusColor.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: statusColor),
                           ),
                           child: Text(
-                            machine.icon,
-                            style: const TextStyle(fontSize: 32),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                machine.name,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                machine.type,
-                                style: TextStyle(
-                                  color: AppTheme.accentColor,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              LinearProgressIndicator(
-                                value: machine.condition / 100,
-                                backgroundColor: Colors.white.withOpacity(0.1),
-                                color: statusColor,
-                                minHeight: 6,
-                                borderRadius: BorderRadius.circular(3),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: statusColor.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: statusColor),
-                              ),
-                              child: Text(
-                                _getStatusLabel(machine.status),
-                                style: TextStyle(
-                                  color: statusColor,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                            _getStatusLabel(machine.status),
+                            style: TextStyle(
+                              color: statusColor,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                                  timeUntil,
-                                  style: TextStyle(
-                                    color: statusColor,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                                .animate(
-                                  onPlay: (controller) => controller.repeat(),
-                                )
-                                .shimmer(
-                                  duration: 2000.ms,
-                                  color: statusColor.withOpacity(0.3),
-                                ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Condition: ${machine.condition.toStringAsFixed(0)}%',
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12,
                           ),
                         ),
+                        const SizedBox(height: 8),
                         Text(
-                          'Next: ${_formatDate(machine.nextMaintenance)}',
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12,
-                          ),
-                        ),
+                              timeUntil,
+                              style: TextStyle(
+                                color: statusColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                            .animate(
+                              onPlay: (controller) => controller.repeat(),
+                            )
+                            .shimmer(
+                              duration: 2000.ms,
+                              color: statusColor.withOpacity(0.3),
+                            ),
                       ],
                     ),
                   ],
                 ),
-              )
-              .animate(
-                onPlay: (controller) =>
-                    machine.status == MaintenanceStatus.urgent
-                    ? controller.repeat()
-                    : null,
-              )
-              .fadeIn(duration: 1000.ms)
-              .then()
-              .fadeOut(duration: 1000.ms),
-    ).animate().fadeIn(delay: (200 + index * 100).ms).slideX(begin: 0.2, end: 0);
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Condition: ${machine.condition.toStringAsFixed(0)}%',
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      'Next: ${_formatDate(machine.nextMaintenance)}',
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        )
+        .animate()
+        .fadeIn(delay: (200 + index * 100).ms)
+        .slideX(begin: 0.2, end: 0);
   }
 
   void _showMachineDetails(MachineMaintenanceInfo machine) {
