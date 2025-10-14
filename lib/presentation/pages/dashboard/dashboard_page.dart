@@ -210,20 +210,91 @@ class DashboardPage extends StatelessWidget {
 
   Widget _buildQuickActions(BuildContext context) {
     final actions = [
-      {'label': 'Smart\nAlerts', 'icon': Icons.notifications_active, 'color': AppTheme.errorColor, 'route': AppRoutes.alerts, 'hasNotification': true},
-      {'label': 'Digital\nTwin', 'icon': Icons.view_in_ar, 'color': Colors.blue, 'route': AppRoutes.digitalTwin},
-      {'label': 'Predictive\nMaint.', 'icon': Icons.engineering, 'color': AppTheme.accentColor, 'route': AppRoutes.predictiveMaintenance},
-      {'label': 'Analytics', 'icon': Icons.analytics, 'color': Colors.purple, 'route': AppRoutes.analytics},
-      {'label': 'Profile', 'icon': Icons.person, 'color': Colors.orange, 'route': AppRoutes.profile},
-      {'label': 'Smart\nOptimizer', 'icon': Icons.auto_awesome, 'color': Colors.cyan, 'route': AppRoutes.smartOptimizer},
-      {'label': 'Anomaly\nDetection', 'icon': Icons.radar, 'color': Colors.red, 'route': AppRoutes.anomalyDetection},
-      {'label': 'Carbon\nFootprint', 'icon': Icons.eco, 'color': Colors.green, 'route': AppRoutes.sustainability},
-      {'label': 'Digital Twin\nSimulation', 'icon': Icons.device_hub, 'color': Colors.cyan, 'route': AppRoutes.digitalTwinSimulation},
-      {'label': 'Maintenance\nScheduler', 'icon': Icons.build_circle, 'color': Colors.amber, 'route': AppRoutes.maintenanceScheduler},
-      {'label': 'Workload\nBalancer', 'icon': Icons.balance, 'color': Colors.deepPurple, 'route': AppRoutes.workloadBalancer},
-      {'label': 'Ore Hardness\nAI', 'icon': Icons.psychology, 'color': Colors.indigo, 'route': AppRoutes.oreHardness},
-      {'label': 'Safety\nDashboard', 'icon': Icons.security, 'color': Colors.red, 'route': AppRoutes.safetyDashboard},
-      {'label': 'AI\nSummary', 'icon': Icons.auto_awesome, 'color': Colors.purple, 'route': AppRoutes.aiSummary},
+      {
+        'label': 'Smart\nAlerts',
+        'icon': Icons.notifications_active,
+        'color': AppTheme.errorColor,
+        'route': AppRoutes.alerts,
+        'hasNotification': true,
+      },
+      {
+        'label': 'Digital\nTwin',
+        'icon': Icons.view_in_ar,
+        'color': Colors.blue,
+        'route': AppRoutes.digitalTwin,
+      },
+      {
+        'label': 'Predictive\nMaint.',
+        'icon': Icons.engineering,
+        'color': AppTheme.accentColor,
+        'route': AppRoutes.predictiveMaintenance,
+      },
+      {
+        'label': 'Analytics',
+        'icon': Icons.analytics,
+        'color': Colors.purple,
+        'route': AppRoutes.analytics,
+      },
+      {
+        'label': 'Profile',
+        'icon': Icons.person,
+        'color': Colors.orange,
+        'route': AppRoutes.profile,
+      },
+      {
+        'label': 'Smart\nOptimizer',
+        'icon': Icons.auto_awesome,
+        'color': Colors.cyan,
+        'route': AppRoutes.smartOptimizer,
+      },
+      {
+        'label': 'Anomaly\nDetection',
+        'icon': Icons.radar,
+        'color': Colors.red,
+        'route': AppRoutes.anomalyDetection,
+      },
+      {
+        'label': 'Carbon\nFootprint',
+        'icon': Icons.eco,
+        'color': Colors.green,
+        'route': AppRoutes.sustainability,
+      },
+      {
+        'label': 'Digital Twin\nSimulation',
+        'icon': Icons.device_hub,
+        'color': Colors.cyan,
+        'route': AppRoutes.digitalTwinSimulation,
+      },
+      {
+        'label': 'Maintenance\nScheduler',
+        'icon': Icons.build_circle,
+        'color': Colors.amber,
+        'route': AppRoutes.maintenanceScheduler,
+      },
+      {
+        'label': 'Workload\nBalancer',
+        'icon': Icons.balance,
+        'color': Colors.deepPurple,
+        'route': AppRoutes.workloadBalancer,
+      },
+      {
+        'label': 'Ore Hardness\nAI',
+        'icon': Icons.psychology,
+        'color': Colors.indigo,
+        'route': AppRoutes.oreHardness,
+      },
+      {
+        'label': 'Safety\nDashboard',
+        'icon': Icons.security,
+        'color': Colors.red,
+        'route': AppRoutes.safetyDashboard,
+      },
+      {
+        'label': 'AI\nSummary',
+        'icon': Icons.auto_awesome,
+        'color': Colors.purple,
+        'route': AppRoutes.aiSummary,
+      },
     ];
 
     return Container(
@@ -297,18 +368,12 @@ class DashboardPage extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              color.withOpacity(0.15),
-              color.withOpacity(0.05),
-            ],
+            colors: [color.withOpacity(0.15), color.withOpacity(0.05)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: color.withOpacity(0.4),
-            width: 1.5,
-          ),
+          border: Border.all(color: color.withOpacity(0.4), width: 1.5),
           boxShadow: [
             BoxShadow(
               color: color.withOpacity(0.15),
@@ -323,53 +388,48 @@ class DashboardPage extends StatelessWidget {
             Positioned(
               right: -10,
               bottom: -10,
-              child: Icon(
-                icon,
-                size: 60,
-                color: color.withOpacity(0.08),
-              ),
+              child: Icon(icon, size: 60, color: color.withOpacity(0.08)),
             ),
             // Main content
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Icon container
                   Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: color.withOpacity(0.15),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: color.withOpacity(0.18),
-                          blurRadius: 8,
-                          spreadRadius: 1,
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: color.withOpacity(0.15),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: color.withOpacity(0.18),
+                              blurRadius: 8,
+                              spreadRadius: 1,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Icon(
-                      icon,
-                      color: color,
-                      size: 24,
-                    ),
-                  )
-                  .animate(onPlay: (controller) => controller.repeat(reverse: true))
-                  .shimmer(
-                    duration: 2000.ms,
-                    color: color.withOpacity(0.4),
-                  ),
+                        child: Icon(icon, color: color, size: 24),
+                      )
+                      .animate(
+                        onPlay: (controller) =>
+                            controller.repeat(reverse: true),
+                      )
+                      .shimmer(
+                        duration: 2000.ms,
+                        color: color.withOpacity(0.4),
+                      ),
                   const SizedBox(height: 10),
                   // Label
                   Text(
                     label,
                     textAlign: TextAlign.left,
-                    maxLines: 2,
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.95),
-                      fontSize: 11,
+                      fontSize: 10,
                       fontWeight: FontWeight.w600,
                       height: 1.2,
                       letterSpacing: 0.2,
@@ -383,30 +443,31 @@ class DashboardPage extends StatelessWidget {
               Positioned(
                 top: 8,
                 right: 8,
-                child: Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        AppTheme.errorColor,
-                        AppTheme.errorColor.withOpacity(0.8),
-                      ],
-                    ),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppTheme.errorColor.withOpacity(0.6),
-                        blurRadius: 6,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                )
-                .animate(onPlay: (controller) => controller.repeat())
-                .fadeIn(duration: 800.ms)
-                .then()
-                .fadeOut(duration: 800.ms),
+                child:
+                    Container(
+                          width: 10,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                AppTheme.errorColor,
+                                AppTheme.errorColor.withOpacity(0.8),
+                              ],
+                            ),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppTheme.errorColor.withOpacity(0.6),
+                                blurRadius: 6,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
+                        )
+                        .animate(onPlay: (controller) => controller.repeat())
+                        .fadeIn(duration: 800.ms)
+                        .then()
+                        .fadeOut(duration: 800.ms),
               ),
           ],
         ),

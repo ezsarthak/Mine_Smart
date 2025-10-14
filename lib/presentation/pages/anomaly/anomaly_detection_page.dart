@@ -92,48 +92,41 @@ class AnomalyDetectionPage extends StatelessWidget {
           if (!hasCritical) return const SizedBox.shrink();
 
           return Container(
-                margin: const EdgeInsets.only(right: 16),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
+            margin: const EdgeInsets.only(right: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppTheme.errorColor,
+                  AppTheme.errorColor.withOpacity(0.7),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.errorColor.withOpacity(0.5),
+                  blurRadius: 10,
+                  spreadRadius: 2,
                 ),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppTheme.errorColor,
-                      AppTheme.errorColor.withOpacity(0.7),
-                    ],
+              ],
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.warning, color: Colors.white, size: 16)
+                    .animate(onPlay: (controller) => controller.repeat())
+                    .shake(duration: 1000.ms),
+                const SizedBox(width: 6),
+                Text(
+                  '${_controller.criticalAnomalies.value} Critical',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
                   ),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.errorColor.withOpacity(0.5),
-                      blurRadius: 10,
-                      spreadRadius: 2,
-                    ),
-                  ],
                 ),
-                child: Row(
-                  children: [
-                    Icon(Icons.warning, color: Colors.white, size: 16)
-                        .animate(onPlay: (controller) => controller.repeat())
-                        .shake(duration: 1000.ms),
-                    const SizedBox(width: 6),
-                    Text(
-                      '${_controller.criticalAnomalies.value} Critical',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-              .animate(onPlay: (controller) => controller.repeat())
-              .fadeIn(duration: 1000.ms)
-              .then()
-              .fadeOut(duration: 1000.ms);
+              ],
+            ),
+          );
         }),
       ],
     );
@@ -221,7 +214,7 @@ class AnomalyDetectionPage extends StatelessWidget {
           ],
         ),
       ),
-    ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1, end: 0);
+    );
   }
 
   Widget _buildStatBox(String label, String value, IconData icon, Color color) {
@@ -268,7 +261,7 @@ class AnomalyDetectionPage extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
-          ).animate().fadeIn(delay: 100.ms).slideX(begin: -0.1, end: 0),
+          ),
           const SizedBox(height: 16),
           ListView.builder(
             shrinkWrap: true,
@@ -276,10 +269,7 @@ class AnomalyDetectionPage extends StatelessWidget {
             itemCount: _controller.equipmentList.length,
             itemBuilder: (context, index) {
               final equipment = _controller.equipmentList[index];
-              return _buildEquipmentCard(context, equipment, index)
-                  .animate()
-                  .fadeIn(delay: (200 + index * 100).ms)
-                  .slideX(begin: 0.2, end: 0);
+              return _buildEquipmentCard(context, equipment, index);
             },
           ),
         ],
@@ -297,135 +287,122 @@ class AnomalyDetectionPage extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => _showEquipmentDetails(context, equipment),
-      child:
-          Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [color.withOpacity(0.15), AppTheme.cardColor],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [color.withOpacity(0.15), AppTheme.cardColor],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: riskLevel == 'critical' ? color : color.withOpacity(0.3),
+            width: riskLevel == 'critical' ? 3 : 2,
+          ),
+          boxShadow: riskLevel == 'critical'
+              ? [
+                  BoxShadow(
+                    color: color.withOpacity(0.4),
+                    blurRadius: 20,
+                    spreadRadius: 2,
                   ),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: riskLevel == 'critical'
-                        ? color
-                        : color.withOpacity(0.3),
-                    width: riskLevel == 'critical' ? 3 : 2,
+                ]
+              : null,
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  boxShadow: riskLevel == 'critical'
-                      ? [
-                          BoxShadow(
-                            color: color.withOpacity(0.4),
-                            blurRadius: 20,
-                            spreadRadius: 2,
-                          ),
-                        ]
-                      : null,
+                  child: Text(
+                    equipment.icon,
+                    style: const TextStyle(fontSize: 32),
+                  ),
                 ),
-                child: Column(
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        equipment.name,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        equipment.type,
+                        style: TextStyle(
+                          color: AppTheme.accentColor,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: color.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Text(
-                            equipment.icon,
-                            style: const TextStyle(fontSize: 32),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                equipment.name,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                equipment.type,
-                                style: TextStyle(
-                                  color: AppTheme.accentColor,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              '${equipment.overallHealth.toStringAsFixed(0)}%',
-                              style: TextStyle(
-                                color: color,
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: color.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: color),
-                              ),
-                              child: Text(
-                                riskLevel.toUpperCase(),
-                                style: TextStyle(
-                                  color: color,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                    Text(
+                      '${equipment.overallHealth.toStringAsFixed(0)}%',
+                      style: TextStyle(
+                        color: color,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    const SizedBox(height: 20),
-                    HealthRadarChart(
-                      dataPoints: equipment.parameters
-                          .map(
-                            (p) => RadarDataPoint(
-                              label: p.name,
-                              value: p.healthScore,
-                            ),
-                          )
-                          .toList(),
-                      size: 250,
-                      onSegmentTap: (segmentIndex) {
-                        _showAnomalyAnalysis(
-                          context,
-                          equipment,
-                          equipment.parameters[segmentIndex],
-                        );
-                      },
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: color.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: color),
+                      ),
+                      child: Text(
+                        riskLevel.toUpperCase(),
+                        style: TextStyle(
+                          color: color,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              )
-              .animate(
-                onPlay: (controller) =>
-                    riskLevel == 'critical' ? controller.repeat() : null,
-              )
-              .fadeIn(duration: 1000.ms)
-              .then()
-              .fadeOut(duration: 1000.ms),
+              ],
+            ),
+            const SizedBox(height: 20),
+            HealthRadarChart(
+              dataPoints: equipment.parameters
+                  .map(
+                    (p) => RadarDataPoint(label: p.name, value: p.healthScore),
+                  )
+                  .toList(),
+              size: 250,
+              onSegmentTap: (segmentIndex) {
+                _showAnomalyAnalysis(
+                  context,
+                  equipment,
+                  equipment.parameters[segmentIndex],
+                );
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 

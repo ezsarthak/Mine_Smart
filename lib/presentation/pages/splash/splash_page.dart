@@ -77,7 +77,7 @@ class _SplashPageState extends State<SplashPage> {
                   ),
               const SizedBox(height: 40),
               Text(
-                'MineOpt AI',
+                'MineSmart AI',
                 style: Theme.of(context).textTheme.displaySmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   foreground: Paint()
