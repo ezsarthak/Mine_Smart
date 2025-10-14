@@ -521,14 +521,6 @@ class AISummaryPage extends StatelessWidget {
             ],
           ),
         )
-        .animate(
-          onPlay: (controller) => item.priority == PriorityLevel.critical
-              ? controller.repeat()
-              : null,
-        )
-        .fadeIn(duration: 1000.ms)
-        .then()
-        .fadeOut(duration: 1000.ms)
         .animate()
         .fadeIn(delay: (300 + categoryIndex * 50 + itemIndex * 50).ms)
         .slideX(begin: 0.2, end: 0);
