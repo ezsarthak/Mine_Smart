@@ -1,16 +1,13 @@
 // filename: lib/presentation/pages/digital_twin/digital_twin_page.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
-import '../../controllers/digital_twin_controller.dart';
-import '../widgets/animated_equipment.dart';
-import '../widgets/twin_metric_card.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../routes/app_routes.dart';
 
 class DigitalTwinPage extends StatelessWidget {
-  DigitalTwinPage({super.key});
-
-  final DigitalTwinController _controller = Get.put(DigitalTwinController());
+  const DigitalTwinPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +24,13 @@ class DigitalTwinPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildEquipmentInfo(context),
-                    const SizedBox(height: 24),
-                    _buildEquipmentVisualization(context),
+                    _buildHeroSection(context),
                     const SizedBox(height: 32),
-                    _buildControlPanel(context),
+                    _buildFeatureGrid(context),
                     const SizedBox(height: 32),
-                    _buildMetricsGrid(context),
+                    _buildQuickStats(context),
+                    const SizedBox(height: 32),
+                    _buildActionButtons(context),
                   ],
                 ),
               ),
@@ -59,16 +56,24 @@ class DigitalTwinPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Digital Twin',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+            Row(
+              children: [
+                Icon(Icons.device_hub, color: AppTheme.accentColor, size: 24)
+                    .animate(onPlay: (controller) => controller.repeat())
+                    .rotate(duration: 3000.ms),
+                const SizedBox(width: 8),
+                Text(
+                  'Digital Twin',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 4),
             Text(
-              'Real-Time Equipment Simulation',
+              'Virtual Plant Overview',
               style: Theme.of(
                 context,
               ).textTheme.bodySmall?.copyWith(color: AppTheme.accentColor),
@@ -77,24 +82,90 @@ class DigitalTwinPage extends StatelessWidget {
         ),
         titlePadding: const EdgeInsets.only(left: 60, bottom: 16),
       ),
-      actions: [
-        Obx(() {
-          final status = _controller.equipmentStatus.value;
-          return Container(
-            margin: const EdgeInsets.only(right: 16),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    );
+  }
+
+  Widget _buildHeroSection(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppTheme.accentColor.withOpacity(0.3),
+            AppTheme.primaryColor.withOpacity(0.2),
+            AppTheme.cardColor,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: AppTheme.accentColor.withOpacity(0.5),
+          width: 2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.accentColor.withOpacity(0.2),
+            blurRadius: 20,
+            spreadRadius: 5,
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Icon(
+                Icons.precision_manufacturing,
+                size: 80,
+                color: AppTheme.accentColor,
+              )
+              .animate(onPlay: (controller) => controller.repeat())
+              .shimmer(
+                duration: 2000.ms,
+                color: AppTheme.accentColor.withOpacity(0.5),
+              ),
+          const SizedBox(height: 20),
+          Text(
+            'Virtual Plant Replica',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Real-time simulation and predictive analytics for your mining operations',
+            textAlign: TextAlign.center,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
+          ),
+          const SizedBox(height: 24),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: _getStatusColor(status).withOpacity(0.2),
+              gradient: LinearGradient(
+                colors: [
+                  AppTheme.successColor,
+                  AppTheme.successColor.withOpacity(0.7),
+                ],
+              ),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: _getStatusColor(status)),
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.successColor.withOpacity(0.3),
+                  blurRadius: 10,
+                  spreadRadius: 2,
+                ),
+              ],
             ),
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
                       width: 8,
                       height: 8,
-                      decoration: BoxDecoration(
-                        color: _getStatusColor(status),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
                         shape: BoxShape.circle,
                       ),
                     )
@@ -102,386 +173,331 @@ class DigitalTwinPage extends StatelessWidget {
                     .fadeIn(duration: 1000.ms)
                     .then()
                     .fadeOut(duration: 1000.ms),
-                const SizedBox(width: 6),
-                Text(
-                  status.toUpperCase(),
+                const SizedBox(width: 8),
+                const Text(
+                  'SYSTEM ACTIVE',
                   style: TextStyle(
-                    color: _getStatusColor(status),
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),
                 ),
               ],
             ),
-          );
-        }),
+          ),
+        ],
+      ),
+    ).animate().fadeIn(delay: 100.ms).scale();
+  }
+
+  Widget _buildFeatureGrid(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Key Features',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ).animate().fadeIn(delay: 100.ms).slideX(begin: -0.1, end: 0),
+        const SizedBox(height: 16),
+        GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: 2,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          childAspectRatio: 1.2,
+          children: [
+            _buildFeatureCard(
+              'Real-Time Monitoring',
+              Icons.monitor_heart,
+              'Live equipment status',
+              Colors.blue,
+              0,
+            ),
+            _buildFeatureCard(
+              'Predictive Analysis',
+              Icons.psychology,
+              'AI-powered forecasting',
+              Colors.purple,
+              1,
+            ),
+            _buildFeatureCard(
+              'What-If Scenarios',
+              Icons.science,
+              'Test configurations',
+              Colors.orange,
+              2,
+            ),
+            _buildFeatureCard(
+              'Performance Tuning',
+              Icons.tune,
+              'Optimize operations',
+              Colors.green,
+              3,
+            ),
+          ],
+        ),
       ],
     );
   }
 
-  Widget _buildEquipmentInfo(BuildContext context) {
+  Widget _buildFeatureCard(
+    String title,
+    IconData icon,
+    String description,
+    Color color,
+    int index,
+  ) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppTheme.primaryColor.withOpacity(0.3), AppTheme.cardColor],
+          colors: [color.withOpacity(0.2), AppTheme.cardColor],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withOpacity(0.3), width: 2),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: color, size: 40),
+          const SizedBox(height: 12),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            description,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white54, fontSize: 11),
+          ),
+        ],
+      ),
+    ).animate().fadeIn(delay: (200 + index * 100).ms).scale();
+  }
+
+  Widget _buildQuickStats(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppTheme.cardColor,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: AppTheme.accentColor.withOpacity(0.3),
           width: 2,
         ),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppTheme.accentColor.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Icon(
-              Icons.precision_manufacturing,
-              color: AppTheme.accentColor,
-              size: 40,
-            ),
+          Row(
+            children: [
+              Icon(Icons.analytics, color: AppTheme.accentColor, size: 24),
+              const SizedBox(width: 12),
+              Text(
+                'Quick Stats',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Industrial Crusher Unit',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: _buildStatItem(
+                  'Accuracy',
+                  '98.5%',
+                  Icons.verified,
+                  AppTheme.successColor,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  'Model: HC-2000X',
-                  style: TextStyle(color: AppTheme.accentColor, fontSize: 14),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildStatItem(
+                  'Simulations',
+                  '1,247',
+                  Icons.play_circle,
+                  AppTheme.accentColor,
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(Icons.location_on, size: 14, color: Colors.white54),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Sector A, Bay 3',
-                      style: TextStyle(color: Colors.white54, fontSize: 12),
-                    ),
-                  ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _buildStatItem(
+                  'Uptime',
+                  '99.2%',
+                  Icons.schedule,
+                  Colors.blue,
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildStatItem(
+                  'Predictions',
+                  '342',
+                  Icons.insights,
+                  Colors.purple,
+                ),
+              ),
+            ],
           ),
         ],
       ),
-    ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1, end: 0);
+    ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1, end: 0);
   }
 
-  Widget _buildEquipmentVisualization(BuildContext context) {
+  Widget _buildStatItem(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
-          height: 400,
-          decoration: BoxDecoration(
-            gradient: RadialGradient(
-              colors: [
-                AppTheme.primaryColor.withOpacity(0.2),
-                AppTheme.backgroundColor,
-              ],
-              center: Alignment.center,
-            ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: AppTheme.accentColor.withOpacity(0.3),
-              width: 2,
-            ),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Stack(
-              children: [
-                // Background grid
-                CustomPaint(painter: GridPainter(), size: Size.infinite),
-                // Equipment animation
-                Center(
-                  child: Obx(
-                    () => AnimatedEquipment(
-                      rotationSpeed: _controller.rotationSpeed.value,
-                      glowIntensity: _controller.glowIntensity.value,
-                      temperature: _controller.temperature.value,
-                      vibration: _controller.vibration.value,
-                    ),
-                  ),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 24),
+          const SizedBox(height: 8),
+          Text(
+                value,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                // Status overlay
-                Positioned(
-                  top: 16,
-                  left: 16,
-                  child: Obx(() {
-                    if (_controller.isStressTesting.value) {
-                      return Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppTheme.errorColor.withOpacity(0.9),
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppTheme.errorColor.withOpacity(0.5),
-                                  blurRadius: 20,
-                                  spreadRadius: 5,
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                      Icons.warning,
-                                      color: Colors.white,
-                                      size: 20,
-                                    )
-                                    .animate(
-                                      onPlay: (controller) =>
-                                          controller.repeat(),
-                                    )
-                                    .shake(duration: 500.ms),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'STRESS TEST: ${_controller.stressTestCountdown.value}s',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                          .animate(onPlay: (controller) => controller.repeat())
-                          .fadeIn(duration: 500.ms)
-                          .then()
-                          .fadeOut(duration: 500.ms);
-                    }
-                    return const SizedBox.shrink();
-                  }),
-                ),
-              ],
-            ),
+              )
+              .animate(onPlay: (controller) => controller.repeat())
+              .shimmer(duration: 2000.ms, color: color.withOpacity(0.3)),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(color: color.withOpacity(0.8), fontSize: 11),
           ),
-        )
-        .animate()
-        .fadeIn(delay: 200.ms)
-        .scale(begin: const Offset(0.95, 0.95), end: const Offset(1, 1));
+        ],
+      ),
+    );
   }
 
-  Widget _buildControlPanel(BuildContext context) {
+  Widget _buildActionButtons(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Simulation Controls',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ).animate().fadeIn(delay: 100.ms).slideX(begin: -0.1, end: 0),
-        const SizedBox(height: 16),
-        Obx(
-          () => AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            child: SizedBox(
-              width: double.infinity,
-              height: 60,
-              child: ElevatedButton(
-                onPressed: _controller.isStressTesting.value
-                    ? null
-                    : () => _controller.startStressTest(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _controller.isStressTesting.value
-                      ? Colors.grey
-                      : AppTheme.errorColor,
-                  disabledBackgroundColor: Colors.grey.withOpacity(0.3),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  elevation: _controller.isStressTesting.value ? 0 : 8,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      _controller.isStressTesting.value
-                          ? Icons.hourglass_empty
-                          : Icons.speed,
-                      size: 28,
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      _controller.isStressTesting.value
-                          ? 'Test in Progress...'
-                          : 'Start Stress Test',
-                      style: const TextStyle(
+        SizedBox(
+          width: double.infinity,
+          height: 60,
+          child:
+              ElevatedButton.icon(
+                    onPressed: () {
+                      Get.toNamed(AppRoutes.DIGITAL_TWIN);
+                    },
+                    icon: const Icon(Icons.play_arrow, size: 28),
+                    label: const Text(
+                      'Launch Simulation',
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.accentColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 8,
+                      shadowColor: AppTheme.accentColor.withOpacity(0.5),
+                    ),
+                  )
+                  .animate(onPlay: (controller) => controller.repeat())
+                  .scale(
+                    duration: 1500.ms,
+                    begin: const Offset(1, 1),
+                    end: const Offset(1.05, 1.05),
+                  )
+                  .then()
+                  .scale(
+                    duration: 1500.ms,
+                    begin: const Offset(1.05, 1.05),
+                    end: const Offset(1, 1),
+                  ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  Get.snackbar(
+                    'Historical Data',
+                    'Viewing past simulations and predictions',
+                    backgroundColor: AppTheme.cardColor,
+                    colorText: Colors.white,
+                    snackPosition: SnackPosition.BOTTOM,
+                    margin: const EdgeInsets.all(16),
+                    borderRadius: 12,
+                  );
+                },
+                icon: const Icon(Icons.history, size: 20),
+                label: const Text('History'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppTheme.accentColor,
+                  side: BorderSide(color: AppTheme.accentColor),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
             ),
-          ),
-        ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1, end: 0),
-        const SizedBox(height: 12),
-        Text(
-          'Simulates high-load conditions for 10 seconds',
-          style: TextStyle(color: Colors.white54, fontSize: 12),
+            const SizedBox(width: 12),
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  Get.snackbar(
+                    'Documentation',
+                    'Opening user guide and tutorials',
+                    backgroundColor: AppTheme.cardColor,
+                    colorText: Colors.white,
+                    snackPosition: SnackPosition.BOTTOM,
+                    margin: const EdgeInsets.all(16),
+                    borderRadius: 12,
+                  );
+                },
+                icon: const Icon(Icons.help_outline, size: 20),
+                label: const Text('Guide'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppTheme.accentColor,
+                  side: BorderSide(color: AppTheme.accentColor),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
-    );
+    ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.1, end: 0);
   }
-
-  Widget _buildMetricsGrid(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Live Metrics',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ).animate().fadeIn(delay: 100.ms).slideX(begin: -0.1, end: 0),
-        const SizedBox(height: 16),
-        Obx(
-          () => Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child:
-                        TwinMetricCard(
-                              title: 'Temperature',
-                              value: _controller.temperature.value,
-                              unit: '°C',
-                              icon: Icons.thermostat,
-                              color: _getTemperatureColor(
-                                _controller.temperature.value,
-                              ),
-                              maxValue: 100,
-                            )
-                            .animate()
-                            .fadeIn(delay: 200.ms)
-                            .slideX(begin: -0.2, end: 0),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child:
-                        TwinMetricCard(
-                              title: 'Vibration',
-                              value: _controller.vibration.value,
-                              unit: 'mm/s',
-                              icon: Icons.vibration,
-                              color: _getVibrationColor(
-                                _controller.vibration.value,
-                              ),
-                              maxValue: 15,
-                            )
-                            .animate()
-                            .fadeIn(delay: 250.ms)
-                            .slideX(begin: -0.2, end: 0),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(
-                    child:
-                        TwinMetricCard(
-                              title: 'Energy',
-                              value: _controller.energy.value,
-                              unit: 'kW',
-                              icon: Icons.bolt,
-                              color: AppTheme.accentColor,
-                              maxValue: 600,
-                            )
-                            .animate()
-                            .fadeIn(delay: 300.ms)
-                            .slideX(begin: -0.2, end: 0),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child:
-                        TwinMetricCard(
-                              title: 'RPM',
-                              value: _controller.rotationSpeed.value * 60,
-                              unit: 'rpm',
-                              icon: Icons.rotate_right,
-                              color: Colors.purple,
-                              maxValue: 360,
-                            )
-                            .animate()
-                            .fadeIn(delay: 350.ms)
-                            .slideX(begin: -0.2, end: 0),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status) {
-      case 'critical':
-        return AppTheme.errorColor;
-      case 'warning':
-        return AppTheme.warningColor;
-      default:
-        return AppTheme.successColor;
-    }
-  }
-
-  Color _getTemperatureColor(double value) {
-    if (value >= 80) return AppTheme.errorColor;
-    if (value >= 70) return AppTheme.warningColor;
-    return AppTheme.successColor;
-  }
-
-  Color _getVibrationColor(double value) {
-    if (value >= 9) return AppTheme.errorColor;
-    if (value >= 7) return AppTheme.warningColor;
-    return AppTheme.successColor;
-  }
-}
-
-class GridPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = AppTheme.accentColor.withOpacity(0.1)
-      ..strokeWidth = 1;
-
-    const spacing = 30.0;
-
-    for (double i = 0; i < size.width; i += spacing) {
-      canvas.drawLine(Offset(i, 0), Offset(i, size.height), paint);
-    }
-
-    for (double i = 0; i < size.height; i += spacing) {
-      canvas.drawLine(Offset(0, i), Offset(size.width, i), paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

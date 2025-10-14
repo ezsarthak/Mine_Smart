@@ -1,117 +1,202 @@
 // filename: lib/presentation/controllers/digital_twin_controller.dart
+
 import 'dart:async';
-import 'package:get/get.dart';
-import '../../data/models/sensor_reading_model.dart';
-import 'sensor_controller.dart';
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class DigitalTwinController extends GetxController
-    with GetTickerProviderStateMixin {
-  final SensorController _sensorController = Get.find<SensorController>();
+class DigitalTwinController extends GetxController {
+  final Random _random = Random();
+  Timer? _simulationTimer;
 
-  // Observable values
-  final RxDouble temperature = 0.0.obs;
-  final RxDouble vibration = 0.0.obs;
-  final RxDouble energy = 0.0.obs;
-  final RxDouble rotationSpeed = 0.0.obs;
-  final RxDouble glowIntensity = 0.0.obs;
-  final RxBool isStressTesting = false.obs;
-  final RxInt stressTestCountdown = 0.obs;
-  final RxString equipmentStatus = 'normal'.obs;
+  // Simulation parameters
+  final RxDouble feedRate = 100.0.obs; // 0-200 t/h
+  final RxDouble oreHardness = 50.0.obs; // 0-100 (soft to hard)
+  final RxDouble crushingPressure = 100.0.obs; // 0-200 bar
+  final RxDouble millSpeed = 50.0.obs; // 0-100 RPM
 
-  // Stress test timer
-  Timer? _stressTestTimer;
+  // Output metrics
+  final RxDouble outputEfficiency = 75.0.obs; // 0-100%
+  final RxDouble energyConsumption = 350.0.obs; // kW
+  final RxDouble throughput = 85.0.obs; // t/h
+  final RxDouble particleSize = 2.5.obs; // mm
+  final RxDouble wearRate = 15.0.obs; // %
+
+  // Simulation state
+  final RxBool isSimulating = false.obs;
+  final RxBool isOptimized = false.obs;
+  final RxList<SimulationDataPoint> efficiencyHistory =
+      <SimulationDataPoint>[].obs;
+  final RxList<SimulationDataPoint> energyHistory = <SimulationDataPoint>[].obs;
+
+  // Plant component states
+  final RxDouble crusherLoad = 0.0.obs;
+  final RxDouble millLoad = 0.0.obs;
+  final RxDouble conveyorSpeed = 0.0.obs;
+  final RxDouble separatorEfficiency = 0.0.obs;
+
+  // Alerts
+  final RxString currentAlert = ''.obs;
+  final RxString alertLevel = 'normal'.obs; // normal, warning, critical
 
   @override
   void onInit() {
     super.onInit();
-    _listenToSensorData();
+    _initializeHistoricalData();
+    _startSimulation();
   }
 
-  void _listenToSensorData() {
-    ever(_sensorController.currentReading, (SensorReadingModel? reading) {
-      if (reading != null) {
-        _updateMetrics(reading);
-      }
-    });
-
-    // Initial update
-    if (_sensorController.currentReading.value != null) {
-      _updateMetrics(_sensorController.currentReading.value!);
+  void _initializeHistoricalData() {
+    final now = DateTime.now();
+    for (int i = 30; i >= 0; i--) {
+      final timestamp = now.subtract(Duration(seconds: i * 2));
+      efficiencyHistory.add(
+        SimulationDataPoint(
+          timestamp: timestamp,
+          value: 70.0 + _random.nextDouble() * 15,
+        ),
+      );
+      energyHistory.add(
+        SimulationDataPoint(
+          timestamp: timestamp,
+          value: 300.0 + _random.nextDouble() * 100,
+        ),
+      );
     }
   }
 
-  void _updateMetrics(SensorReadingModel reading) {
-    if (!isStressTesting.value) {
-      temperature.value = reading.temperature;
-      vibration.value = reading.vibration;
-      energy.value = reading.energy;
-      equipmentStatus.value = reading.status;
-
-      // Calculate derived values
-      rotationSpeed.value = _calculateRotationSpeed(reading);
-      glowIntensity.value = _calculateGlowIntensity(reading);
-    }
-  }
-
-  double _calculateRotationSpeed(SensorReadingModel reading) {
-    // Base speed on energy consumption (50-500 kW → 0.5-5.0 rotations/sec)
-    return (reading.energy / 100).clamp(0.5, 5.0);
-  }
-
-  double _calculateGlowIntensity(SensorReadingModel reading) {
-    // Base intensity on temperature (20-85°C → 0.2-1.0)
-    return ((reading.temperature - 20) / 65).clamp(0.2, 1.0);
-  }
-
-  void startStressTest() {
-    if (isStressTesting.value) return;
-
-    isStressTesting.value = true;
-    stressTestCountdown.value = 10;
-
-    // Simulate stress test conditions
-    temperature.value = 95.0; // High temperature
-    vibration.value = 12.0; // High vibration
-    energy.value = 550.0; // High energy
-    rotationSpeed.value = 6.0; // Very fast rotation
-    glowIntensity.value = 1.0; // Maximum glow
-    equipmentStatus.value = 'critical';
-
-    // Countdown timer
-    _stressTestTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      stressTestCountdown.value--;
-
-      if (stressTestCountdown.value <= 0) {
-        stopStressTest();
-      }
+  void _startSimulation() {
+    _simulationTimer?.cancel();
+    _simulationTimer = Timer.periodic(const Duration(seconds: 2), (_) {
+      _updateSimulation();
     });
+  }
 
-    Get.snackbar(
-      'Stress Test Started',
-      'Simulating high-load conditions for 10 seconds',
-      backgroundColor: Get.theme.colorScheme.error,
-      colorText: Get.theme.colorScheme.onError,
-      snackPosition: SnackPosition.TOP,
-      margin: const EdgeInsets.all(16),
-      borderRadius: 12,
-      duration: const Duration(seconds: 2),
+  void _updateSimulation() {
+    if (!isSimulating.value) return;
+
+    // Calculate output efficiency based on parameters
+    final baseEfficiency = 100.0;
+    final feedPenalty = (feedRate.value - 100).abs() * 0.15;
+    final hardnessPenalty = (oreHardness.value - 50) * 0.2;
+    final pressureFactor = (crushingPressure.value / 100) * 5;
+    final speedFactor = (millSpeed.value / 50) * 3;
+
+    outputEfficiency.value =
+        (baseEfficiency -
+                feedPenalty -
+                hardnessPenalty +
+                pressureFactor +
+                speedFactor +
+                _random.nextDouble() * 5 -
+                2.5)
+            .clamp(40.0, 98.0);
+
+    // Calculate energy consumption
+    final baseEnergy = 250.0;
+    final feedEnergy = feedRate.value * 1.5;
+    final hardnessEnergy = oreHardness.value * 2.0;
+    final pressureEnergy = crushingPressure.value * 1.2;
+    final speedEnergy = millSpeed.value * 1.8;
+
+    energyConsumption.value =
+        (baseEnergy +
+                feedEnergy +
+                hardnessEnergy +
+                pressureEnergy +
+                speedEnergy +
+                _random.nextDouble() * 30 -
+                15)
+            .clamp(200.0, 800.0);
+
+    // Calculate throughput
+    throughput.value =
+        (feedRate.value * (outputEfficiency.value / 100) +
+                _random.nextDouble() * 5 -
+                2.5)
+            .clamp(30.0, 180.0);
+
+    // Calculate particle size
+    particleSize.value =
+        (5.0 -
+                (crushingPressure.value / 100) * 3.0 -
+                (millSpeed.value / 100) * 1.5 +
+                _random.nextDouble() * 0.3)
+            .clamp(0.5, 5.0);
+
+    // Calculate wear rate
+    wearRate.value =
+        (oreHardness.value * 0.3 +
+                feedRate.value * 0.1 +
+                _random.nextDouble() * 5)
+            .clamp(5.0, 40.0);
+
+    // Update component states
+    _updateComponentStates();
+
+    // Add to history
+    final now = DateTime.now();
+    efficiencyHistory.add(
+      SimulationDataPoint(timestamp: now, value: outputEfficiency.value),
     );
-  }
+    energyHistory.add(
+      SimulationDataPoint(timestamp: now, value: energyConsumption.value),
+    );
 
-  void stopStressTest() {
-    _stressTestTimer?.cancel();
-    isStressTesting.value = false;
-    stressTestCountdown.value = 0;
-
-    // Return to normal readings
-    if (_sensorController.currentReading.value != null) {
-      _updateMetrics(_sensorController.currentReading.value!);
+    // Keep only last 30 data points
+    if (efficiencyHistory.length > 30) {
+      efficiencyHistory.removeAt(0);
+    }
+    if (energyHistory.length > 30) {
+      energyHistory.removeAt(0);
     }
 
+    // Check for alerts
+    _checkAlerts();
+  }
+
+  void _updateComponentStates() {
+    crusherLoad.value = (feedRate.value / 200 * 100 + _random.nextDouble() * 5)
+        .clamp(0.0, 100.0);
+    millLoad.value = (throughput.value / 180 * 100 + _random.nextDouble() * 5)
+        .clamp(0.0, 100.0);
+    conveyorSpeed.value =
+        (feedRate.value / 200 * 100 + _random.nextDouble() * 5).clamp(
+          0.0,
+          100.0,
+        );
+    separatorEfficiency.value =
+        (outputEfficiency.value + _random.nextDouble() * 5 - 2.5).clamp(
+          0.0,
+          100.0,
+        );
+  }
+
+  void _checkAlerts() {
+    currentAlert.value = '';
+    alertLevel.value = 'normal';
+
+    if (outputEfficiency.value < 50) {
+      currentAlert.value =
+          'Low efficiency detected. Consider adjusting parameters.';
+      alertLevel.value = 'critical';
+    } else if (energyConsumption.value > 600) {
+      currentAlert.value = 'High energy consumption. Optimization recommended.';
+      alertLevel.value = 'warning';
+    } else if (wearRate.value > 30) {
+      currentAlert.value = 'High wear rate. Schedule maintenance soon.';
+      alertLevel.value = 'warning';
+    } else if (outputEfficiency.value > 85) {
+      currentAlert.value = 'Optimal performance achieved!';
+      alertLevel.value = 'normal';
+    }
+  }
+
+  void startSimulation() {
+    isSimulating.value = true;
     Get.snackbar(
-      'Stress Test Complete',
-      'Equipment returned to normal operation',
+      'Simulation Started',
+      'Real-time simulation is now active',
       backgroundColor: Get.theme.colorScheme.primary,
       colorText: Get.theme.colorScheme.onPrimary,
       snackPosition: SnackPosition.TOP,
@@ -121,9 +206,61 @@ class DigitalTwinController extends GetxController
     );
   }
 
+  void stopSimulation() {
+    isSimulating.value = false;
+    Get.snackbar(
+      'Simulation Stopped',
+      'Simulation paused',
+      backgroundColor: Get.theme.colorScheme.error,
+      colorText: Get.theme.colorScheme.onError,
+      snackPosition: SnackPosition.TOP,
+      margin: const EdgeInsets.all(16),
+      borderRadius: 12,
+      duration: const Duration(seconds: 2),
+    );
+  }
+
+  void optimizeParameters() {
+    // AI-driven optimization
+    feedRate.value = 120.0;
+    oreHardness.value = 45.0;
+    crushingPressure.value = 140.0;
+    millSpeed.value = 65.0;
+    isOptimized.value = true;
+
+    Get.snackbar(
+      'Parameters Optimized',
+      'AI has calculated optimal settings',
+      backgroundColor: Get.theme.colorScheme.primary,
+      colorText: Get.theme.colorScheme.onPrimary,
+      snackPosition: SnackPosition.TOP,
+      margin: const EdgeInsets.all(16),
+      borderRadius: 12,
+      duration: const Duration(seconds: 2),
+    );
+
+    Future.delayed(const Duration(seconds: 3), () {
+      isOptimized.value = false;
+    });
+  }
+
+  void resetParameters() {
+    feedRate.value = 100.0;
+    oreHardness.value = 50.0;
+    crushingPressure.value = 100.0;
+    millSpeed.value = 50.0;
+  }
+
   @override
   void onClose() {
-    _stressTestTimer?.cancel();
+    _simulationTimer?.cancel();
     super.onClose();
   }
+}
+
+class SimulationDataPoint {
+  final DateTime timestamp;
+  final double value;
+
+  SimulationDataPoint({required this.timestamp, required this.value});
 }

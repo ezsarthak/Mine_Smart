@@ -22,7 +22,10 @@ void main() async {
       systemNavigationBarIconBrightness: Brightness.light,
     ),
   );
-
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
@@ -46,7 +49,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.dark,
-      initialRoute: AppRoutes.splash,
+      initialRoute: AppRoutes.SPLASH,
       getPages: AppRoutes.routes,
       defaultTransition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 300),

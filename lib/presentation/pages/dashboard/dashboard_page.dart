@@ -116,9 +116,7 @@ class DashboardPage extends StatelessWidget {
   Widget _buildWelcomeSection(BuildContext context) {
     final user = _authController.user;
     final displayName = user?.displayName;
-    final initial = (displayName != null && displayName.isNotEmpty)
-        ? displayName.substring(0, 1).toUpperCase()
-        : 'U';
+    final initial = "SV";
     return Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
@@ -170,7 +168,7 @@ class DashboardPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      user?.displayName ?? 'User',
+                      "Supervisor Uday",
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -296,6 +294,109 @@ class DashboardPage extends StatelessWidget {
                   Icons.person,
                   Colors.orange,
                   () => Get.toNamed(AppRoutes.profile),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _buildActionButton(
+                  context,
+                  'Smart\nOptimizer',
+                  Icons.auto_awesome,
+                  Colors.cyan,
+                  () => Get.toNamed(AppRoutes.smartOptimizer),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _buildActionButton(
+                  context,
+                  'Anomaly\nDetection',
+                  Icons.radar,
+                  Colors.red,
+                  () => Get.toNamed(AppRoutes.anomalyDetection),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Expanded(
+                child: _buildActionButton(
+                  context,
+                  'Carbon\nFootprint',
+                  Icons.eco,
+                  Colors.green,
+                  () => Get.toNamed(AppRoutes.sustainability),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Expanded(
+                child: _buildActionButton(
+                  context,
+                  'Digital Twin\nSimulation',
+                  Icons.device_hub,
+                  Colors.cyan,
+                  () => Get.toNamed(AppRoutes.digitalTwinSimulation),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _buildActionButton(
+                  context,
+                  'Maintenance\nScheduler',
+                  Icons.build_circle,
+                  Colors.amber,
+                  () => Get.toNamed(AppRoutes.maintenanceScheduler),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Expanded(
+                child: _buildActionButton(
+                  context,
+                  'Workload\nBalancer',
+                  Icons.balance,
+                  Colors.deepPurple,
+                  () => Get.toNamed(AppRoutes.workloadBalancer),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Expanded(
+                child: _buildActionButton(
+                  context,
+                  'Ore Hardness\nAI',
+                  Icons.psychology,
+                  Colors.indigo,
+                  () => Get.toNamed(AppRoutes.oreHardness),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _buildActionButton(
+                  context,
+                  'Safety\nDashboard',
+                  Icons.security,
+                  Colors.red,
+                  () => Get.toNamed(AppRoutes.safetyDashboard),
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              Expanded(
+                child: _buildActionButton(
+                  context,
+                  'AI\nSummary',
+                  Icons.auto_awesome,
+                  Colors.purple,
+                  () => Get.toNamed(AppRoutes.aiSummary),
                 ),
               ),
               const Expanded(child: SizedBox()), // Spacer

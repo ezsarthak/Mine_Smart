@@ -1,11 +1,11 @@
-// filename: lib/presentation/pages/analytics/analytics_page.dart
+// filename: lib/presentation/pages/decision_hub/decision_hub_page.dart
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/theme/app_theme.dart';
 
-class AnalyticsPage extends StatelessWidget {
-  const AnalyticsPage({super.key});
+class DecisionHubPage extends StatelessWidget {
+  const DecisionHubPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +18,13 @@ class AnalyticsPage extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         title: const Text(
-          'Analytics',
+          'Decision Hub',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: const Center(
         child: Text(
-          'Advanced Analytics Dashboard\nComing Soon',
+          'AI Decision Support Hub\nComing Soon',
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.white54, fontSize: 18),
         ),
