@@ -209,6 +209,23 @@ class DashboardPage extends StatelessWidget {
   // Update the Quick Actions section to include Analytics and Profile
 
   Widget _buildQuickActions(BuildContext context) {
+    final actions = [
+      {'label': 'Smart\nAlerts', 'icon': Icons.notifications_active, 'color': AppTheme.errorColor, 'route': AppRoutes.alerts, 'hasNotification': true},
+      {'label': 'Digital\nTwin', 'icon': Icons.view_in_ar, 'color': Colors.blue, 'route': AppRoutes.digitalTwin},
+      {'label': 'Predictive\nMaint.', 'icon': Icons.engineering, 'color': AppTheme.accentColor, 'route': AppRoutes.predictiveMaintenance},
+      {'label': 'Analytics', 'icon': Icons.analytics, 'color': Colors.purple, 'route': AppRoutes.analytics},
+      {'label': 'Profile', 'icon': Icons.person, 'color': Colors.orange, 'route': AppRoutes.profile},
+      {'label': 'Smart\nOptimizer', 'icon': Icons.auto_awesome, 'color': Colors.cyan, 'route': AppRoutes.smartOptimizer},
+      {'label': 'Anomaly\nDetection', 'icon': Icons.radar, 'color': Colors.red, 'route': AppRoutes.anomalyDetection},
+      {'label': 'Carbon\nFootprint', 'icon': Icons.eco, 'color': Colors.green, 'route': AppRoutes.sustainability},
+      {'label': 'Digital Twin\nSimulation', 'icon': Icons.device_hub, 'color': Colors.cyan, 'route': AppRoutes.digitalTwinSimulation},
+      {'label': 'Maintenance\nScheduler', 'icon': Icons.build_circle, 'color': Colors.amber, 'route': AppRoutes.maintenanceScheduler},
+      {'label': 'Workload\nBalancer', 'icon': Icons.balance, 'color': Colors.deepPurple, 'route': AppRoutes.workloadBalancer},
+      {'label': 'Ore Hardness\nAI', 'icon': Icons.psychology, 'color': Colors.indigo, 'route': AppRoutes.oreHardness},
+      {'label': 'Safety\nDashboard', 'icon': Icons.security, 'color': Colors.red, 'route': AppRoutes.safetyDashboard},
+      {'label': 'AI\nSummary', 'icon': Icons.auto_awesome, 'color': Colors.purple, 'route': AppRoutes.aiSummary},
+    ];
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -240,167 +257,27 @@ class DashboardPage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: _buildActionButton(
-                  context,
-                  'Smart\nAlerts',
-                  Icons.notifications_active,
-                  AppTheme.errorColor,
-                  () => Get.toNamed(AppRoutes.alerts),
-                  hasNotification: true,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _buildActionButton(
-                  context,
-                  'Digital\nTwin',
-                  Icons.view_in_ar,
-                  Colors.blue,
-                  () => Get.toNamed(AppRoutes.digitalTwin),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _buildActionButton(
-                  context,
-                  'Predictive\nMaint.',
-                  Icons.engineering,
-                  AppTheme.accentColor,
-                  () => Get.toNamed(AppRoutes.predictiveMaintenance),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: _buildActionButton(
-                  context,
-                  'Analytics',
-                  Icons.analytics,
-                  Colors.purple,
-                  () => Get.toNamed(AppRoutes.analytics),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _buildActionButton(
-                  context,
-                  'Profile',
-                  Icons.person,
-                  Colors.orange,
-                  () => Get.toNamed(AppRoutes.profile),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _buildActionButton(
-                  context,
-                  'Smart\nOptimizer',
-                  Icons.auto_awesome,
-                  Colors.cyan,
-                  () => Get.toNamed(AppRoutes.smartOptimizer),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: _buildActionButton(
-                  context,
-                  'Anomaly\nDetection',
-                  Icons.radar,
-                  Colors.red,
-                  () => Get.toNamed(AppRoutes.anomalyDetection),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: _buildActionButton(
-                  context,
-                  'Carbon\nFootprint',
-                  Icons.eco,
-                  Colors.green,
-                  () => Get.toNamed(AppRoutes.sustainability),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: _buildActionButton(
-                  context,
-                  'Digital Twin\nSimulation',
-                  Icons.device_hub,
-                  Colors.cyan,
-                  () => Get.toNamed(AppRoutes.digitalTwinSimulation),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: _buildActionButton(
-                  context,
-                  'Maintenance\nScheduler',
-                  Icons.build_circle,
-                  Colors.amber,
-                  () => Get.toNamed(AppRoutes.maintenanceScheduler),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: _buildActionButton(
-                  context,
-                  'Workload\nBalancer',
-                  Icons.balance,
-                  Colors.deepPurple,
-                  () => Get.toNamed(AppRoutes.workloadBalancer),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: _buildActionButton(
-                  context,
-                  'Ore Hardness\nAI',
-                  Icons.psychology,
-                  Colors.indigo,
-                  () => Get.toNamed(AppRoutes.oreHardness),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: _buildActionButton(
-                  context,
-                  'Safety\nDashboard',
-                  Icons.security,
-                  Colors.red,
-                  () => Get.toNamed(AppRoutes.safetyDashboard),
-                ),
-              ),
-              const SizedBox(height: 10),
-
-              Expanded(
-                child: _buildActionButton(
-                  context,
-                  'AI\nSummary',
-                  Icons.auto_awesome,
-                  Colors.purple,
-                  () => Get.toNamed(AppRoutes.aiSummary),
-                ),
-              ),
-              const Expanded(child: SizedBox()), // Spacer
-            ],
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: 1.0,
+            ),
+            itemCount: actions.length,
+            itemBuilder: (context, index) {
+              final action = actions[index];
+              return _buildActionButton(
+                context,
+                action['label'] as String,
+                action['icon'] as IconData,
+                action['color'] as Color,
+                () => Get.toNamed(action['route'] as String),
+                hasNotification: action['hasNotification'] as bool? ?? false,
+              );
+            },
           ),
         ],
       ),
@@ -418,58 +295,118 @@ class DashboardPage extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [color.withOpacity(0.2), color.withOpacity(0.05)],
+            colors: [
+              color.withOpacity(0.15),
+              color.withOpacity(0.05),
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.3)),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: color.withOpacity(0.4),
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.15),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Stack(
           children: [
-            Column(
-              children: [
-                Icon(icon, color: color, size: 28),
-                const SizedBox(height: 8),
-                Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    height: 1.2,
-                  ),
-                ),
-              ],
+            // Background icon pattern
+            Positioned(
+              right: -10,
+              bottom: -10,
+              child: Icon(
+                icon,
+                size: 60,
+                color: color.withOpacity(0.08),
+              ),
             ),
+            // Main content
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Icon container
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: color.withOpacity(0.15),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: color.withOpacity(0.18),
+                          blurRadius: 8,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      icon,
+                      color: color,
+                      size: 24,
+                    ),
+                  )
+                  .animate(onPlay: (controller) => controller.repeat(reverse: true))
+                  .shimmer(
+                    duration: 2000.ms,
+                    color: color.withOpacity(0.4),
+                  ),
+                  const SizedBox(height: 10),
+                  // Label
+                  Text(
+                    label,
+                    textAlign: TextAlign.left,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.95),
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      height: 1.2,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Notification badge
             if (hasNotification)
               Positioned(
-                top: 0,
+                top: 8,
                 right: 8,
-                child:
-                    Container(
-                          width: 12,
-                          height: 12,
-                          decoration: BoxDecoration(
-                            color: AppTheme.errorColor,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppTheme.errorColor.withOpacity(0.5),
-                                blurRadius: 8,
-                                spreadRadius: 2,
-                              ),
-                            ],
-                          ),
-                        )
-                        .animate(onPlay: (controller) => controller.repeat())
-                        .fadeIn(duration: 1000.ms)
-                        .then()
-                        .fadeOut(duration: 1000.ms),
+                child: Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppTheme.errorColor,
+                        AppTheme.errorColor.withOpacity(0.8),
+                      ],
+                    ),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.errorColor.withOpacity(0.6),
+                        blurRadius: 6,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                )
+                .animate(onPlay: (controller) => controller.repeat())
+                .fadeIn(duration: 800.ms)
+                .then()
+                .fadeOut(duration: 800.ms),
               ),
           ],
         ),
@@ -672,18 +609,18 @@ class DashboardPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
+                          Wrap(
+                            spacing: 6,
+                            runSpacing: 6,
                             children: [
                               _buildReadingChip(
                                 '${reading.energy.toStringAsFixed(1)} kW',
                                 AppTheme.accentColor,
                               ),
-                              const SizedBox(width: 8),
                               _buildReadingChip(
                                 '${reading.temperature.toStringAsFixed(1)}°C',
                                 Colors.orange,
                               ),
-                              const SizedBox(width: 8),
                               _buildReadingChip(
                                 '${reading.vibration.toStringAsFixed(1)} mm/s',
                                 Colors.purple,
